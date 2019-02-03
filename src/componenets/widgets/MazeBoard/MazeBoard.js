@@ -1,7 +1,15 @@
 import React, { Component } from "react";
 
 import MazeCell from "./MazeCell/MazeCell";
-import { generateRandomNumbers } from "./MazeBoard.helpers";
+import {
+  generateRandomNumbers,
+  generateMariosPosition
+} from "./helpers/positionGenerators";
+import { handleKeyboardNavigation } from "./helpers/keyboardNavigation";
+import {
+  mushroomCollectedSound,
+  backgroundMusicPlayer
+} from "./helpers/musicHandler";
 
 import "./MazeBoard.css";
 
@@ -9,11 +17,11 @@ export default class MazeBoard extends Component {
   constructor(props) {
     super(props);
 
-    const { mazeSize = 10 } = this.props;
-    const noOfMazeCell = mazeSize ** 2;
+    const { mazeSize = 10 } = this.props; // Size of maze like 10 X 10
+    const noOfMazeCell = mazeSize ** 2; // No of cells in grid (Ex. 10*10 == 100)
 
     // Generating mario's initial middle position according to mazeSize.
-    const mariosPosition = this.generateMariosPosition(mazeSize);
+    const mariosPosition = generateMariosPosition(mazeSize);
 
     // Generating random "mushroom positions" that equavalent to "mazeSize". (Ex: 10x10 grid have 10 mushrooms); Excluding initial mariosPostion.
     const mushroomPositions = generateRandomNumbers({
@@ -29,17 +37,44 @@ export default class MazeBoard extends Component {
       mushroomPositions: mushroomPositions,
       steps: 0,
       score: 0,
-      catchedMushroomes: 0
+      catchedMushroomes: 0,
+      backgroundMusic: true
     };
   }
 
-  generateMariosPosition(mazeSize) {
-    // Calulate initially how much further (starting from 0) mario should be positioned.
+  toggleBackgroundMusic() {
+    const { backgroundMusic } = this.state;
 
-    const middle = Math.round(mazeSize / 2);
-    return (middle - 1) * mazeSize + (middle - 1);
+    if (backgroundMusic) {
+      backgroundMusicPlayer.stop();
+      this.setState({
+        backgroundMusic: false
+      });
+    } else {
+      backgroundMusicPlayer.play();
+      this.setState({
+        backgroundMusic: true
+      });
+    }
   }
 
+  handleScoring(updatedMushroomPositions) {
+    const { mazeSize, steps } = this.state;
+
+    // Playing collected like sound when mario collect a mushroom.
+    mushroomCollectedSound.play();
+
+    const catchedMushroomes = mazeSize - updatedMushroomPositions.length; // mazeSize is equvalent to total mushrooms.
+    const newScore = catchedMushroomes * 100 - steps;
+
+    this.setState({
+      mushroomPositions: updatedMushroomPositions,
+      catchedMushroomes,
+      score: newScore
+    });
+  }
+
+  // Heart of this component. Generate individual cell in grid accordingly.
   generateMazeCells() {
     const { mazeSize, mariosPosition, mushroomPositions } = this.state;
 
@@ -63,115 +98,21 @@ export default class MazeBoard extends Component {
     return mazeCellList;
   }
 
-  handleKeyNavigation(e) {
-    const {
-      mariosPosition: mariosCurrentPosition,
-      mazeSize,
-      steps
-    } = this.state;
-    const direction = e.key;
-
-    function isValidKeyNavigation(direction, mariosCurrentPosition, mazeSize) {
-      // Validating direction is possible or not through current row & column. (For ex. when we are in the top row we should not be able to go further up.
-      // "mazeSize" is equavelent to "No of cells per Row, Column" and "No of Rows, Columns per Grid".
-      const currentRow =
-        mariosCurrentPosition % mazeSize === 0
-          ? Math.ceil(mariosCurrentPosition / mazeSize) + 1 // Since calculation start from 0.
-          : Math.ceil(mariosCurrentPosition / mazeSize);
-      const currentColumn =
-        mazeSize -
-        (Math.ceil(currentRow * mazeSize) - 1 - mariosCurrentPosition);
-
-      switch (direction) {
-        case "ArrowUp": {
-          // False when we are in First Row.
-          return currentRow > 1;
-        }
-
-        case "ArrowDown": {
-          // False when we are in Last Row.
-          return currentRow < mazeSize;
-        }
-
-        case "ArrowLeft": {
-          // False when we are in First Column.
-          return currentColumn > 1;
-        }
-
-        case "ArrowRight": {
-          // False when we are in Last Column.
-          return currentColumn < mazeSize;
-        }
-        default: {
-          // For any other key direction is not possible.
-          return false;
-        }
-      }
-    }
-
-    if (!isValidKeyNavigation(direction, mariosCurrentPosition, mazeSize)) {
-      // If not a valid navigation nothing happens.
-      return;
-    } else {
-      switch (direction) {
-        case "ArrowUp": {
-          this.setState({
-            mariosPosition: mariosCurrentPosition - mazeSize,
-            steps: steps + 1
-          });
-          break;
-        }
-
-        case "ArrowDown": {
-          this.setState({
-            mariosPosition: mariosCurrentPosition + mazeSize,
-            steps: steps + 1
-          });
-          break;
-        }
-
-        case "ArrowLeft": {
-          this.setState({
-            mariosPosition: mariosCurrentPosition - 1,
-            steps: steps + 1
-          });
-          break;
-        }
-
-        case "ArrowRight": {
-          this.setState({
-            mariosPosition: mariosCurrentPosition + 1,
-            steps: steps + 1
-          });
-          break;
-        }
-        default:
-      }
-    }
-  }
-
   componentWillMount() {
-    document.addEventListener("keydown", this.handleKeyNavigation.bind(this));
+    // Keyboard Navigation Binding.
+    document.addEventListener("keydown", handleKeyboardNavigation.bind(this));
+
+    // Starting background music.
+    backgroundMusicPlayer.play();
   }
 
   componentWillUnmount() {
     document.removeEventListener(
       "keydown",
-      this.handleKeyNavigation.bind(this)
+      handleKeyboardNavigation.bind(this)
     );
-  }
 
-  handleScoring(updatedMushroomPositions) {
-    const { mazeSize, steps } = this.state;
-
-    const catchedMushroomes = mazeSize - updatedMushroomPositions.length; // mazeSize is equvalent to total mushrooms.
-    const newScore = catchedMushroomes * 100 - steps;
-
-    this.setState({
-      mushroomPositions: updatedMushroomPositions,
-      catchedMushroomes,
-      score: newScore
-    });
+    backgroundMusicPlayer.stop();
   }
 
   render() {
@@ -187,8 +128,7 @@ export default class MazeBoard extends Component {
       return <h1>Hooray - You Have Won</h1>;
     }
 
-    console.log(steps, score, catchedMushroomes);
-
+    // Styles for making dynamic GRID.
     const mazeSizeAsStyleProperty = `repeat(${mazeSize}, 1fr)`;
     const mazeBoardGridStyle = {
       gridTemplateColumns: mazeSizeAsStyleProperty,
@@ -205,6 +145,9 @@ export default class MazeBoard extends Component {
             <div>Catched Mushrooms : {catchedMushroomes}</div>
             <div>Remaining Mushrooms : {mazeSize - catchedMushroomes}</div>
             <div>Score : {score}</div>
+            <button onClick={() => this.toggleBackgroundMusic()}>
+              Music Stop
+            </button>
           </div>
           <div className="MazeBoard__grid" style={mazeBoardGridStyle}>
             {generatedMazeCells}

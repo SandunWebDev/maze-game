@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+// import { Howl } from "howler";
 
 import "./MazeCell.css";
 import marioSVG from "../../../../assets/images/mario.png";
@@ -13,15 +14,16 @@ export default class MazeCell extends Component {
       handleScoring
     } = this.props;
 
-    // Deciding witch image to show.
+    // Handling when mushroom is colledcted.
     if (
       mariosPosition === cellId &&
       mushroomPositions.includes(mariosPosition)
     ) {
+      // this.collectedSound.play();
+
       const updatedMushroomPositions = mushroomPositions.filter(position => {
         return position !== mariosPosition;
       });
-      console.log("A");
       handleScoring(updatedMushroomPositions);
     }
   }
@@ -39,6 +41,13 @@ export default class MazeCell extends Component {
 
     return cellImage;
   }
+
+  // componentDidMount() {
+  //   this.collectedSound = new Howl({
+  //     src: ["../assets/sounds/gameBackgroundMusic.mp3"],
+  //     volume: 0.8
+  //   });
+  // }
 
   render() {
     const { cellId } = this.props;
