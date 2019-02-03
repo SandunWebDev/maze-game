@@ -1,5 +1,4 @@
 .MazeCell {
-  background: red;
   border: black solid 1px;
   display: flex;
   justify-content: center;

@@ -27,7 +27,9 @@ export default class MazeBoard extends Component {
       mazeSize: mazeSize,
       mariosPosition: mariosPosition,
       mushroomPositions: mushroomPositions,
-      steps: 0
+      steps: 0,
+      score: 0,
+      catchedMushroomes: 0
     };
   }
 
@@ -53,6 +55,7 @@ export default class MazeBoard extends Component {
           key={i}
           mariosPosition={mariosPosition}
           mushroomPositions={mushroomPositions}
+          handleScoring={this.handleScoring.bind(this)}
         />
       );
     }
@@ -158,13 +161,36 @@ export default class MazeBoard extends Component {
     );
   }
 
-  render() {
+  handleScoring(updatedMushroomPositions) {
     const { mazeSize, steps } = this.state;
 
-    console.log(steps);
+    const catchedMushroomes = mazeSize - updatedMushroomPositions.length; // mazeSize is equvalent to total mushrooms.
+    const newScore = catchedMushroomes * 100 - steps;
+
+    this.setState({
+      mushroomPositions: updatedMushroomPositions,
+      catchedMushroomes,
+      score: newScore
+    });
+  }
+
+  render() {
+    const {
+      mazeSize,
+      steps,
+      score,
+      catchedMushroomes,
+      mushroomPositions
+    } = this.state;
+
+    if (mushroomPositions.length === 0) {
+      return <h1>Hooray - You Have Won</h1>;
+    }
+
+    console.log(steps, score, catchedMushroomes);
 
     const mazeSizeAsStyleProperty = `repeat(${mazeSize}, 1fr)`;
-    const mazeBoardStyle = {
+    const mazeBoardGridStyle = {
       gridTemplateColumns: mazeSizeAsStyleProperty,
       gridTemplateRows: mazeSizeAsStyleProperty
     };
@@ -172,8 +198,18 @@ export default class MazeBoard extends Component {
     const generatedMazeCells = this.generateMazeCells();
 
     return (
-      <div className="MazeBoard" style={mazeBoardStyle}>
-        {generatedMazeCells}
+      <div className="MazeBoard">
+        <div>
+          <div className="MazeBoard__scoreboard">
+            <div>Steps : {steps}</div>
+            <div>Catched Mushrooms : {catchedMushroomes}</div>
+            <div>Remaining Mushrooms : {mazeSize - catchedMushroomes}</div>
+            <div>Score : {score}</div>
+          </div>
+          <div className="MazeBoard__grid" style={mazeBoardGridStyle}>
+            {generatedMazeCells}
+          </div>
+        </div>
       </div>
     );
   }
