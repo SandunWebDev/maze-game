@@ -1,0 +1,5 @@
+.MazeBoard {
+  width: 700px;
+  height: 700px;
+  display: inline-grid;
+}

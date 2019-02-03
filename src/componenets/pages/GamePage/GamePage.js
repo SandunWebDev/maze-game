@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+
+import MazeBoard from "../../widgets/MazeBoard/MazeBoard";
 import "./GamePage.css";
 
 export default class GamePage extends Component {
@@ -6,6 +8,7 @@ export default class GamePage extends Component {
     return (
       <div className="GamePage">
         <h1>GamePage</h1>
+        <MazeBoard />
       </div>
     );
   }

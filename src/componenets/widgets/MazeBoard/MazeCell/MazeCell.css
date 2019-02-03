@@ -1,0 +1,16 @@
+.MazeCell {
+  background: red;
+  border: black solid 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.MazeCell span {
+  position: absolute;
+}
+
+.MazeCell__image {
+  max-width: 80%;
+  max-height: 80%;
+}
