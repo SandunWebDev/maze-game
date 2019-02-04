@@ -10,7 +10,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <h1>Maze Game</h1>
+        {/* <h1>Maze Game</h1>
         <ul>
           <li>
             <NavLink exact to="/" activeClassName="">
@@ -22,12 +22,14 @@ class App extends Component {
               GAME
             </NavLink>
           </li>
-        </ul>
-        <Switch>
-          <Route exact path="/game" component={GamePage} />
-          <Route exact path="/" component={HomePage} />
-          <Redirect to="/" />
-        </Switch>
+        </ul> */}
+        <div className="App__container">
+          <Switch>
+            <Route exact path="/game" component={GamePage} />
+            <Route exact path="/" component={HomePage} />
+            <Redirect to="/" />
+          </Switch>
+        </div>
       </div>
     );
   }

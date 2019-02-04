@@ -3,7 +3,7 @@ import React, { Component } from "react";
 
 import "./MazeCell.css";
 import marioSVG from "../../../../assets/images/mario.png";
-import mushroomSVG from "../../../../assets/images/mushroom.svg";
+import mushroomSVG from "../../../../assets/images/mushroom_green.png";
 
 export default class MazeCell extends Component {
   handleScoringData() {
@@ -11,7 +11,8 @@ export default class MazeCell extends Component {
       cellId,
       mariosPosition,
       mushroomPositions,
-      handleScoring
+      handleScoring,
+      currentDirection
     } = this.props;
 
     // Handling when mushroom is colledcted.
@@ -29,32 +30,53 @@ export default class MazeCell extends Component {
   }
 
   decideCellImage() {
-    const { cellId, mariosPosition, mushroomPositions } = this.props;
-    let cellImage = "";
+    const {
+      cellId,
+      mariosPosition,
+      mushroomPositions,
+      currentDirection
+    } = this.props;
+    let cellImage = {};
 
     // Deciding witch image to show.
     if (mariosPosition === cellId) {
-      cellImage = marioSVG;
+      const mariosDirectionStyle =
+        currentDirection === "left"
+          ? "MazeCell__image--mario--leftSide"
+          : "MazeCell__image--mario--rightSide";
+
+      cellImage = {
+        src: marioSVG,
+        className: `MazeCell__image--mario ${mariosDirectionStyle}`
+      };
     } else if (mushroomPositions.includes(cellId)) {
-      cellImage = mushroomSVG;
+      cellImage = {
+        src: mushroomSVG,
+        className: "MazeCell__image--mushroom"
+      };
+    } else {
+      cellImage = {
+        src: "",
+        className: ""
+      };
     }
 
     return cellImage;
   }
 
-  // componentDidMount() {
-  //   this.collectedSound = new Howl({
-  //     src: ["../assets/sounds/gameBackgroundMusic.mp3"],
-  //     volume: 0.8
-  //   });
-  // }
-
   render() {
     const { cellId } = this.props;
+
     this.handleScoringData();
+    const cellImageData = this.decideCellImage();
+
     return (
       <div className={`MazeCell MazeCell__${cellId}`}>
-        <img className="MazeCell__image" src={this.decideCellImage()} alt="" />
+        <img
+          className={`MazeCell__image ${cellImageData.className}`}
+          src={cellImageData.src}
+          alt=""
+        />
       </div>
     );
   }

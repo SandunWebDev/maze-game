@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 
 import MazeCell from "./MazeCell/MazeCell";
+import MazeScoreboard from "./MazeScoreboard/MazeScoreboard";
+
 import {
   generateRandomNumbers,
   generateMariosPosition
@@ -34,6 +36,7 @@ export default class MazeBoard extends Component {
     this.state = {
       mazeSize: mazeSize,
       mariosPosition: mariosPosition,
+      currentDirection: "right", // Which side mario should be facing.
       mushroomPositions: mushroomPositions,
       steps: 0,
       score: 0,
@@ -76,7 +79,12 @@ export default class MazeBoard extends Component {
 
   // Heart of this component. Generate individual cell in grid accordingly.
   generateMazeCells() {
-    const { mazeSize, mariosPosition, mushroomPositions } = this.state;
+    const {
+      mazeSize,
+      mariosPosition,
+      mushroomPositions,
+      currentDirection
+    } = this.state;
 
     const mazeCellList = [];
 
@@ -91,6 +99,7 @@ export default class MazeBoard extends Component {
           mariosPosition={mariosPosition}
           mushroomPositions={mushroomPositions}
           handleScoring={this.handleScoring.bind(this)}
+          currentDirection={currentDirection}
         />
       );
     }
@@ -118,10 +127,11 @@ export default class MazeBoard extends Component {
   render() {
     const {
       mazeSize,
+      mushroomPositions,
       steps,
       score,
       catchedMushroomes,
-      mushroomPositions
+      backgroundMusic
     } = this.state;
 
     if (mushroomPositions.length === 0) {
@@ -140,17 +150,19 @@ export default class MazeBoard extends Component {
     return (
       <div className="MazeBoard">
         <div>
-          <div className="MazeBoard__scoreboard">
-            <div>Steps : {steps}</div>
-            <div>Catched Mushrooms : {catchedMushroomes}</div>
-            <div>Remaining Mushrooms : {mazeSize - catchedMushroomes}</div>
-            <div>Score : {score}</div>
-            <button onClick={() => this.toggleBackgroundMusic()}>
-              Music Stop
-            </button>
-          </div>
-          <div className="MazeBoard__grid" style={mazeBoardGridStyle}>
-            {generatedMazeCells}
+          {/* <MazeScoreboard {...this.state} /> */}
+          <MazeScoreboard
+            mazeSize={mazeSize}
+            steps={steps}
+            score={score}
+            catchedMushroomes={catchedMushroomes}
+            toggleBackgroundMusic={this.toggleBackgroundMusic.bind(this)}
+            backgroundMusicStatus={backgroundMusic}
+          />
+          <div className="MazeBoard__gridContainer">
+            <div className="MazeBoard__grid" style={mazeBoardGridStyle}>
+              {generatedMazeCells}
+            </div>
           </div>
         </div>
       </div>

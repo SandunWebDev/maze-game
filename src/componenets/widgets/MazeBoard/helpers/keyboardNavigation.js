@@ -74,7 +74,8 @@ export function handleKeyboardNavigation(e) {
       case "ArrowLeft": {
         this.setState({
           mariosPosition: mariosCurrentPosition - 1,
-          steps: steps + 1
+          steps: steps + 1,
+          currentDirection: "left"
         });
         break;
       }
@@ -82,7 +83,8 @@ export function handleKeyboardNavigation(e) {
       case "ArrowRight": {
         this.setState({
           mariosPosition: mariosCurrentPosition + 1,
-          steps: steps + 1
+          steps: steps + 1,
+          currentDirection: "right"
         });
         break;
       }
