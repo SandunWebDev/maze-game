@@ -2,6 +2,7 @@ import React, { Component } from "react";
 
 import MazeCell from "./MazeCell/MazeCell";
 import MazeScoreboard from "./MazeScoreboard/MazeScoreboard";
+import MazeWon from "./MazeWon/MazeWon";
 
 import {
   generateRandomNumbers,
@@ -19,7 +20,7 @@ export default class MazeBoard extends Component {
   constructor(props) {
     super(props);
 
-    const { mazeSize = 10 } = this.props; // Size of maze like 10 X 10
+    const { mazeSize = 3 } = this.props; // Size of maze like 10 X 10
     const noOfMazeCell = mazeSize ** 2; // No of cells in grid (Ex. 10*10 == 100)
 
     // Generating mario's initial middle position according to mazeSize.
@@ -134,8 +135,19 @@ export default class MazeBoard extends Component {
       backgroundMusic
     } = this.state;
 
+    // Check if user is Won. (When all mushrooms collected)
     if (mushroomPositions.length === 0) {
-      return <h1>Hooray - You Have Won</h1>;
+      return (
+        <MazeWon
+          mazeSize={mazeSize}
+          steps={steps}
+          score={score}
+          catchedMushroomes={catchedMushroomes}
+          toggleBackgroundMusic={this.toggleBackgroundMusic.bind(this)}
+          backgroundMusicStatus={backgroundMusic}
+          hide={[""]}
+        />
+      );
     }
 
     // Styles for making dynamic GRID.
@@ -150,7 +162,6 @@ export default class MazeBoard extends Component {
     return (
       <div className="MazeBoard">
         <div>
-          {/* <MazeScoreboard {...this.state} /> */}
           <MazeScoreboard
             mazeSize={mazeSize}
             steps={steps}

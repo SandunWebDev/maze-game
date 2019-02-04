@@ -21,8 +21,6 @@ export default class MazeScoreboard extends Component {
       ? "MazeScoreboard__musicButton--playing"
       : "MazeScoreboard__musicButton--stopped";
 
-    const musicIconTitle = backgroundMusicStatus ? "Stop Music" : "Play Music";
-
     return (
       <div className="MazeScoreboard">
         <MazeScoreboardInfo title="Steps" text={steps} />
@@ -36,6 +34,7 @@ export default class MazeScoreboard extends Component {
         <div
           className={`MazeScoreboard__musicButton ${musicIconStyle}`}
           onClick={toggleBackgroundMusic}
+          title={backgroundMusicStatus ? "Stop Music" : "Play Music"}
         />
       </div>
     );
