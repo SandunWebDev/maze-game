@@ -41,7 +41,7 @@ See Live Demo at [here](https://objective-shannon-989792.netlify.com).
 
 - Just run `npm run docker:dev:run`. It will install and run all the dependencies and services need to run this project. Then you can interact with the program through http://localhost:3000.
 - Use `npm run docker:dev:stop` to stop Docker containers gracefully (otherwise unexpected errors occurs sometimes.) and `npm run docker:dev:test` to test inside the container.
-- Also already built "Docker Images" of this project can be found in [here].(https://cloud.docker.com/repository/docker/sandunwebdev/maze-game-image-prod).
+- Also already built "Docker Images" of this project can be found in [here](https://cloud.docker.com/repository/docker/sandunwebdev/maze-game-image-prod).
 
 ### # USING NORMAL WAY
 
@@ -60,7 +60,7 @@ See Live Demo at [here](https://objective-shannon-989792.netlify.com).
 
 ## **How To Lint**
 
-- React Webpack Development Server configured to automatically takes care of "Linting/Code Formattinh" with "ESLint" and "Prettier".
+- React Webpack Development Server configured to automatically takes care of "Linting/Code Formatting" with "ESLint" and "Prettier".
 - But If you want to manually just run `npm run lint`.
 
 ---
