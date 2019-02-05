@@ -2,8 +2,6 @@ import React, { Component } from "react";
 
 import MazeScoreboardInfo from "./MazeScoreboardInfo/MazeScoreboardInfo";
 
-import musicPlayingIcon from "../../../../assets/images/musicPlaying.svg";
-import musicStoppedIcon from "../../../../assets/images/musicStopped.svg";
 import "./MazeScoreboard.css";
 
 export default class MazeScoreboard extends Component {

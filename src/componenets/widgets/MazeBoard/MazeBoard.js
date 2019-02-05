@@ -20,7 +20,7 @@ export default class MazeBoard extends Component {
   constructor(props) {
     super(props);
 
-    const { mazeSize = 3 } = this.props; // Size of maze like 10 X 10
+    const { mazeSize = 10 } = this.props; // Size of maze like 10 X 10
     const noOfMazeCell = mazeSize ** 2; // No of cells in grid (Ex. 10*10 == 100)
 
     // Generating mario's initial middle position according to mazeSize.
@@ -29,7 +29,7 @@ export default class MazeBoard extends Component {
     // Generating random "mushroom positions" that equavalent to "mazeSize". (Ex: 10x10 grid have 10 mushrooms); Excluding initial mariosPostion.
     const mushroomPositions = generateRandomNumbers({
       min: 0,
-      max: noOfMazeCell,
+      max: noOfMazeCell - 1, // Substracting "1" due to couting start at 0.
       noOfRandomNum: mazeSize,
       excludeList: [mariosPosition]
     });

@@ -33,3 +33,7 @@
   display: flex;
   justify-content: center;
 }
+
+.MazeWon_playAgainButton:hover {
+  background: rgb(175, 177, 52);
+}

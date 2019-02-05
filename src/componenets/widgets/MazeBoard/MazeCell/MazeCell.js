@@ -2,7 +2,7 @@ import React, { Component } from "react";
 // import { Howl } from "howler";
 
 import "./MazeCell.css";
-import marioSVG from "../../../../assets/images/mario.png";
+import marioSVG from "../../../../assets/images/mario.svg";
 import mushroomSVG from "../../../../assets/images/mushroom_green.png";
 
 export default class MazeCell extends Component {
@@ -11,8 +11,7 @@ export default class MazeCell extends Component {
       cellId,
       mariosPosition,
       mushroomPositions,
-      handleScoring,
-      currentDirection
+      handleScoring
     } = this.props;
 
     // Handling when mushroom is colledcted.
